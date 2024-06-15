@@ -1,34 +1,42 @@
-Installing Nginx & Running it as a Service
-*Note 1: There is an issue running NSSM created services on the Windows 10 Creator's Update, after you've created the services run the following command for each service nssm set ServiceName AppNoConsole 1 in cmd (run as admin)
+# Installing Nginx & Running it as a Service
 
-*Note 2: For the above to work, you would also need to grab the latest pre-release build from https://nssm.cc/builds
+***Note 1:** There is an issue running NSSM created services on the Windows 10 Creator's Update, after you've created the services run the following command for each service `nssm set ServiceName AppNoConsole 1`  in cmd (run as admin)
 
-Step 1: Installing Nginx
-Download Nginx from: http://nginx.org/en/download.html
-Install Nginx to your preferred location
-Copy the Nginx folder to your preferred location e.g. c:\
-If you want to run Nginx as a service then go the 'Running Nginx as a service' section, if not continue.
-Go to the location you copied the Nginx folder e.g. c:\nginx
-Double click on 'nginx.exe' in c:\nginx , nginx should now be running on your system
-To verify, open a browser and type localhost and press enter. If you get "Welcome to nginx!” message then Nginx has been installed successfully.
-Note: you would need to open 'nginx.exe' every time you reboot your system, to avoid this, install Nginx as a service.
-Step 2: Running Nginx as a service
-Download NSSM from: https://nssm.cc/download
-Copy the nssm.exe from the win32 or win64 folder depending on your system to C:\Windows\System32
-Open cmd as admin, navigate to C:\Windows\System32
-Type in this command without the quotes “nssm install nginx”
-Path = C:\nginx\nginx.exe
-Startup directory = C:\nginx
-source: imgur.com
+***Note 2:** For the above to work, you would also need to grab the latest pre-release build from https://nssm.cc/builds
+## Step 1: Installing Nginx
 
-Install service
-Make sure you run the service as the admin account
-Open run and type in services.msc
-Search for the nginx service we just installed
-Double-click and go to the Log On tab
-Select ‘This account:’ and fill in your account details and then press ok.
-Right click on the nginx service and restart
-Making your Nginx install PHP ready, uncomment the following code from your nginx.conf file (c:\nginx\conf\nginx.conf)
+
+
+1. Download Nginx from: http://nginx.org/en/download.html
+2. Install Nginx to your preferred location
+3. Copy the Nginx folder to your preferred location e.g. c:\
+4. If you want to run Nginx as a service then go the 'Running Nginx as a service' section, if not continue.
+5. Go to the location you copied the Nginx folder e.g. c:\nginx
+6. Double click on 'nginx.exe' in c:\nginx , nginx should now be running on your system
+7. To verify, open a browser and type localhost and press enter. If you get "Welcome to nginx!” message then Nginx has been installed successfully. <br> 
+**Note:** you would need to open 'nginx.exe' every time you reboot your system, to avoid this, install Nginx as a service.
+
+## Step 2: Running Nginx as a service
+1. Download NSSM from: https://nssm.cc/download
+2. Copy the nssm.exe from the win32 or win64 folder depending on your system to C:\Windows\System32
+3. Open cmd as admin, navigate to C:\Windows\System32
+4. Type in this command without the quotes “nssm install nginx”
+5. Path = C:\nginx\nginx.exe
+6. Startup directory = C:\nginx
+
+<a href="http://imgur.com/h21f0uB"><img src="http://i.imgur.com/h21f0uB.png" title="source: imgur.com" /></a>
+
+7. Install service
+8. Make sure you run the service as the admin account
+ * Open run and type in services.msc
+ * Search for the nginx service we just installed
+ * Double-click and go to the Log On tab
+ * Select ‘This account:’ and fill in your account details and then press ok.
+ * Right click on the nginx service and restart
+	
+9. Making your Nginx install PHP ready, uncomment the following code from your nginx.conf file (c:\nginx\conf\nginx.conf)
+
+```
         location ~ \.php$ {
             root           html;
             fastcgi_pass   127.0.0.1:9000;
@@ -36,8 +44,10 @@ Making your Nginx install PHP ready, uncomment the following code from your ngin
             fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
             include        fastcgi_params;
         }
+```
 OR
 
+```
         #pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
         #
         location ~ \.php$ {
@@ -47,42 +57,54 @@ OR
             fastcgi_param  SCRIPT_FILENAME  c:/nginx/html$fastcgi_script_name;
             include        fastcgi_params;
         }
-To verify, open a browser and type localhost and press enter. If you get "Welcome to nginx!” message then Nginx has been installed successfully.
-Installing PHP & Running as a service on Windows
-*Note 1: There is an issue running NSSM created services on the Windows 10 Creator's Update, after you've created the services run the following command for each service nssm set ServiceName AppNoConsole 1 in cmd (run as admin)
+```
 
-*Note 2: For the above to work, you would also need to grab the latest pre-release build from https://nssm.cc/builds
 
-Installing PHP for Windows
-Download PHP for Windows from here: http://windows.php.net/download (Non Thread Safe version used in this guide)
-Create a folder called PHP under your Nginx directory e.g. C:\nginx\php and copy the downloaded files to this folder
-Running PHP as a service
-Install NSSM by following steps 1 & 2 from here.
 
-If you’ve got ‘nssm’ already setup, open command prompt as admin.
-Type in the following cmd without the quotes “nssm install php”
-Path = C:\nginx\php\php-cgi.exe
-Startup directory = C:\nginx\php
-Arguments = -b 127.0.0.1:9000
-Install Service
-source: imgur.com
 
-On the opened cmd prompt type in “nssm start php” (without the quotes) to start the PHP service.
-If the installed PHP service doesn’t start, then try manually running the ‘php-cgi.exe’ file in C:\nginx\php\ , If you get a missing ‘VCRUNTIME’ related error then follow the solution on this link: http://stackoverflow.com/questions/30811668/php-7-missing-vcruntime140-dll
-Make a copy of one of the php.ini-development or php.ini-production files and rename it to php.ini
-Open the php.ini file and search for the following and uncomment each:
-extension_dir = "ext"
-extension=php_openssl.dll
-extension=php_pdo_sqlite.dll
-extension=php_curl.dll
-On the opened cmd prompt type in “nssm restart php” (without the quotes) to restart the PHP service to apply the changes in php.ini.
-Note: Organizr requires php_pdo_sqlite.dll & php_openssl.dll extensions
+10. To verify, open a browser and type localhost and press enter. If you get "Welcome to nginx!” message then Nginx has been installed successfully.
 
-Sample Config Files
-Nginx.conf
+# Installing PHP & Running as a service on Windows
+***Note 1:** There is an issue running NSSM created services on the Windows 10 Creator's Update, after you've created the services run the following command for each service `nssm set ServiceName AppNoConsole 1`  in cmd (run as admin)
+
+***Note 2:** For the above to work, you would also need to grab the latest pre-release build from https://nssm.cc/builds
+
+## Installing PHP for Windows
+
+1. Download PHP for Windows from here: http://windows.php.net/download (Non Thread Safe version used in this guide)
+2. Create a folder called PHP under your Nginx directory e.g. C:\nginx\php and copy the downloaded files to this folder
+
+## Running PHP as a service
+Install NSSM by following steps 1 & 2 from [here.](https://github.com/causefx/Organizr/wiki/Windows-Installation-from-scratch#step-2-running-nginx-as-a-service)
+1. If you’ve got ‘nssm’ already setup, open command prompt as admin. 
+2. Type in the following cmd without the quotes “nssm install php”
+3. Path = C:\nginx\php\php-cgi.exe
+4. Startup directory = C:\nginx\php
+5. Arguments =     -b 127.0.0.1:9000
+6. Install Service
+
+<a href="http://imgur.com/KTKCbDs"><img src="http://i.imgur.com/KTKCbDs.png" title="source: imgur.com" /></a>
+
+7. On the opened cmd prompt type in “nssm start php” (without the quotes) to start the PHP service.
+8. If the installed PHP service doesn’t start, then try manually running the ‘php-cgi.exe’ file in C:\nginx\php\  , If you get a missing ‘VCRUNTIME’ related error then follow the solution on this link: http://stackoverflow.com/questions/30811668/php-7-missing-vcruntime140-dll
+9. Make a copy  of one of the php.ini-development or php.ini-production files and rename it to php.ini
+10. Open the php.ini file and search for the following and uncomment each:
+* extension_dir = "ext"
+* extension=php_openssl.dll
+* extension=php_pdo_sqlite.dll
+* extension=php_curl.dll
+11. On the opened cmd prompt type in “nssm restart php” (without the quotes) to restart the PHP service to apply the changes in php.ini.
+
+
+**Note:** Organizr requires php_pdo_sqlite.dll & php_openssl.dll extensions
+
+# Sample Config Files
+
+**Nginx.conf**
 
 You can copy the following if you wish and replace the content in your nginx.conf file
 
+```
 
 #user  nobody;
 worker_processes  1;
@@ -200,3 +222,7 @@ http {
     #}
 
 }
+
+
+
+```
